@@ -1,42 +1,29 @@
-# See https://docs.docker.com/engine/reference/builder/#dockerignore-file for more about ignoring files.
+# syntax = docker/dockerfile:1
+FROM ruby:3.3.7-slim
 
-# Ignore git directory.
-/.git/
-/.gitignore
+WORKDIR /rails
 
-# Ignore bundler config.
-/.bundle
+# Install system dependencies
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y \
+    build-essential \
+    default-mysql-client \
+    default-libmysqlclient-dev \
+    libyaml-dev && \
+    rm -rf /var/lib/apt/lists/*
 
-# Ignore all environment files (except templates).
-/.env*
-!/.env*.erb
+# Install gems
+COPY Gemfile Gemfile.lock ./
+RUN bundle install --jobs 4 --retry 3
 
-# Ignore all default key files.
-/config/master.key
-/config/credentials/*.key
+# Add gems to PATH
+ENV PATH="/rails/vendor/bundle/ruby/3.3.0/bin:${PATH}"
 
-# Ignore all logfiles and tempfiles.
-/log/*
-/tmp/*
-!/log/.keep
-!/tmp/.keep
+# Copy application code
+COPY . .
 
-# Ignore pidfiles, but keep the directory.
-/tmp/pids/*
-!/tmp/pids/.keep
+# Create tmp directory and ensure it's writable
+RUN mkdir -p tmp/pids && chmod 777 tmp/pids
 
-# Ignore storage (uploaded files in development and any SQLite databases).
-/storage/*
-!/storage/.keep
-/tmp/storage/*
-!/tmp/storage/.keep
-
-# Ignore CI service files.
-/.github
-
-# Ignore development files
-/.devcontainer
-
-# Ignore Docker-related files
-/.dockerignore
-/Dockerfile*
+EXPOSE 3000
+CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0"]
