@@ -1,4 +1,4 @@
-## syntax = docker/dockerfile:1
+# syntax=docker/dockerfile:1
 FROM ruby:3.3.7-slim
 
 WORKDIR /rails

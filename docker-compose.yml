@@ -32,8 +32,8 @@ services:
       DATABASE_HOST: db
       DATABASE_PORT: 3306
       DATABASE_NAME: expense_system_development
-      DATABASE_USERNAME: expense_user
-      DATABASE_PASSWORD: expense_password
+      DATABASE_USERNAME: root
+      DATABASE_PASSWORD: rootpassword
     ports:
       - "3000:3000"
     depends_on:
