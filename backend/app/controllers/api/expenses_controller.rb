@@ -8,8 +8,9 @@ class Api::ExpensesController < ApplicationController
 
       start_date = Date.new(year, month, 1)
       end_date = start_date.end_of_month
-
-      expenses = expenses.where(created_at: start_date.beginning_of_day..end_date.end_of_day)
+      # FIXING The created_at with date and create a shorthand with start_date..end_date
+    
+      expenses = expenses.where(date: start_date..end_date)
     end
 
     render json: expenses.map { |expense| format_expense(expense) }

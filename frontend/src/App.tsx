@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Sidebar from "./components/Sidebar";
-import HistoryPage from "./pages/HistoryPage";
+import HistoryPage from "./pages/HistoryPage.tsx";
 import { COLORS } from "./constants/colors";
 
 function App() {
