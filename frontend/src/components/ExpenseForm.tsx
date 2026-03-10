@@ -1,12 +1,8 @@
-/**
- * Form component for adding/editing expenses
- */
-
-import React from "react";
-import { ExpenseFormData } from "../types";
-import { EXPENSE_CATEGORIES } from "../constants/categories";
+import React, { useEffect, useState } from "react";
+import { Category, ExpenseFormData } from "../types";
 import { TextField, SelectBox, Button } from "../vibes";
 import { useExpenseForm } from "../hooks/useExpenseForm";
+import { fetchCategories } from "../services/api";
 
 interface ExpenseFormProps {
   initialData?: Partial<ExpenseFormData>;
@@ -22,10 +18,24 @@ export function ExpenseForm({
   submitLabel = "Add Expense",
 }: ExpenseFormProps) {
   const { formData, errors, isSubmitting, handleChange, handleSubmit } =
-    useExpenseForm({
-      initialData,
-      onSubmit,
-    });
+    useExpenseForm({ initialData, onSubmit });
+
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loadingCategories, setLoadingCategories] = useState(true);
+
+  useEffect(() => {
+    const fetchCategoryData = async () => {
+      try {
+        const data = await fetchCategories();
+        setCategories(data);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      } finally {
+        setLoadingCategories(false);
+      }
+    };
+    fetchCategoryData();
+  }, []);
 
   const formStyle: React.CSSProperties = {
     display: "flex",
@@ -39,9 +49,9 @@ export function ExpenseForm({
     marginTop: "0.5rem",
   };
 
-  const categoryOptions = EXPENSE_CATEGORIES.map((category) => ({
-    value: category,
-    label: category,
+  const categoryOptions = categories.map((category) => ({
+    value: category.id.toString(),
+    label: category.name,
   }));
 
   return (
@@ -53,7 +63,7 @@ export function ExpenseForm({
         placeholder="0.00"
         value={formData.amount}
         onChange={(e) => handleChange("amount", e.target.value)}
-        error={errors.amount}
+        error={errors.amount?.toString()}
         fullWidth
         required
       />
@@ -72,11 +82,12 @@ export function ExpenseForm({
       <SelectBox
         label="Category"
         options={categoryOptions}
-        value={formData.category}
-        onChange={(e) => handleChange("category", e.target.value)}
-        error={errors.category}
+        value={formData.category_id?.toString() || ""}
+        onChange={(e) => handleChange("category_id", e.target.value)}
+        error={errors.category_id}
         fullWidth
         required
+        disabled={loadingCategories}
       />
 
       <TextField
@@ -90,12 +101,7 @@ export function ExpenseForm({
       />
 
       <div style={buttonGroupStyle}>
-        <Button
-          type="submit"
-          variant="primary"
-          disabled={isSubmitting}
-          fullWidth
-        >
+        <Button type="submit" variant="primary" disabled={isSubmitting} fullWidth>
           {isSubmitting ? "Submitting..." : submitLabel}
         </Button>
         {onCancel && (

@@ -33,6 +33,7 @@ function App() {
       />
       <main style={mainStyle}>
         {currentPage === "history" && <HistoryPage />}
+      
       </main>
     </div>
   );

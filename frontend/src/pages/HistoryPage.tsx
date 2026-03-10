@@ -6,7 +6,6 @@ import { MonthNavigation } from "../components/MonthNavigation";
 import CategoryBreakdown from "../components/CategoryBreakdown";
 import { CalendarExpenseTable } from "../components/CalendarExpenseTable";
 import { ExpenseForm } from "../components/ExpenseForm";
-
 import { Modal, Button } from "../vibes";
 import { COLORS } from "../constants/colors";
 import { CategoryForm } from "../components/CategoryForm";
@@ -27,7 +26,10 @@ const HistoryPage: React.FC = () => {
       year: yearParam ? parseInt(yearParam) : currentDate.getFullYear(),
       month: monthParam ? parseInt(monthParam) : currentDate.getMonth() + 1,
     };
+
+
   };
+
 
   const initial = getInitialYearMonth();
   const [selectedYear, setSelectedYear] = useState(initial.year);
@@ -213,7 +215,7 @@ const HistoryPage: React.FC = () => {
           </>
         )}
       </div>
-
+      
 
       {/* Creating Logic For Modal , Could change Dynamically based on modalFormType */}
       <Modal

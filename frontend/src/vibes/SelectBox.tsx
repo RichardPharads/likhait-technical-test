@@ -9,7 +9,7 @@ interface SelectBoxProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   label?: string;
   error?: string;
   fullWidth?: boolean;
-  options: Array<{ value: string; label: string }>;
+  options: Array<{ value: string; label: string}>;
 }
 
 export function SelectBox({

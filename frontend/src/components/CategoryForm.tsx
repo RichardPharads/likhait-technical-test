@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { CategoryFormData } from "../types";
 import { TextField, Button } from "../vibes";
 import { useCategoryForm } from "../hooks/useCategoryForm";
@@ -21,7 +21,10 @@ export function CategoryForm({
       initialData,
       onSubmit,
     });
-
+  
+    useEffect(() => {
+      
+    })
   const formStyle: React.CSSProperties = {
     display: "flex",
     flexDirection: "column",
